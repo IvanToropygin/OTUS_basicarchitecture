@@ -2,27 +2,41 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph"
-    app:startDestination="@id/FirstFragment">
+    app:startDestination="@id/personalInfoFragment">
 
     <fragment
-        android:id="@+id/FirstFragment"
-        android:name="com.sumin.otus_basicarchitecture.FirstFragment"
-        android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
-
+        android:id="@+id/personalInfoFragment"
+        android:name="com.sumin.otus_basicarchitecture.ui.PersonalInfoFragment"
+        android:label="Personal Info"
+        tools:layout="@layout/fragment_personal_info">
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_personalInfoFragment_to_addressFragment"
+            app:destination="@id/addressFragment" />
     </fragment>
+
     <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.sumin.otus_basicarchitecture.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
-
+        android:id="@+id/addressFragment"
+        android:name="com.sumin.otus_basicarchitecture.ui.AddressFragment"
+        android:label="Address"
+        tools:layout="@layout/fragment_address">
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
+            android:id="@+id/action_addressFragment_to_interestsFragment"
+            app:destination="@id/interestsFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/interestsFragment"
+        android:name="com.sumin.otus_basicarchitecture.ui.InterestsFragment"
+        android:label="Interests"
+        tools:layout="@layout/fragment_interests">
+        <action
+            android:id="@+id/action_interestsFragment_to_summaryFragment"
+            app:destination="@id/summaryFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/summaryFragment"
+        android:name="com.sumin.otus_basicarchitecture.ui.SummaryFragment"
+        android:label="Summary"
+        tools:layout="@layout/fragment_summary" />
 </navigation>
