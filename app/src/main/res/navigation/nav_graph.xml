@@ -31,7 +31,8 @@
         tools:layout="@layout/fragment_interests">
         <action
             android:id="@+id/action_interestsFragment_to_summaryFragment"
-            app:destination="@id/summaryFragment" />
+            app:destination="@id/summaryFragment"
+            app:popUpTo="@id/personalInfoFragment" />
     </fragment>
 
     <fragment

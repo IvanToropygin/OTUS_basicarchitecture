@@ -9,27 +9,36 @@ import com.sumin.otus_basicarchitecture.utils.Constants.Companion.BIRTHDAY_KEY
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.NAME_KEY
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.SURNAME_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
+import java.time.Period
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 
 @HiltViewModel
 class PersonalInfoViewModel @Inject constructor(
-    private val wizardCache: WizardCache
+    private val wizardCache: WizardCache,
 ) : ViewModel() {
 
     private val _isNextButtonEnabled = MutableLiveData(false)
     val isNextButtonEnabled: LiveData<Boolean> get() = _isNextButtonEnabled
 
     fun validateInput(firstName: String, lastName: String, birthDate: String): Boolean {
-        val isValid = firstName.isNotEmpty() && lastName.isNotEmpty() && birthDate.isNotEmpty() && validateAge(birthDate)
+        val isValid = firstName.isNotEmpty() &&
+                lastName.isNotEmpty() &&
+                birthDate.isNotEmpty() &&
+                validateAge(birthDate)
         _isNextButtonEnabled.value = isValid
         return isValid
     }
 
-    private fun validateAge(birthDate: String): Boolean {
+    private fun validateAge(birthDateStr: String): Boolean {
         try {
-            if (birthDate.trim().toInt() > 18) return true
+            val birthDate = LocalDate.parse(birthDateStr, DateTimeFormatter.ofPattern("dd.MM.yyyy"))
+            val currentDate = LocalDate.now()
+            val age = Period.between(birthDate, currentDate).years
+            return age >= 18
         } catch (e: Exception) {
-            Log.d("PersonalInfoViewModel","Проверка даты рождения упала с ошибкой: ${e.message}")
+            Log.d("PersonalInfoViewModel", "Ошибка при проверке даты рождения: ${e.message}")
         }
         return false
     }

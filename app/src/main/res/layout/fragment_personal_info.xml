@@ -18,11 +18,11 @@
         android:hint="@string/surname" />
 
     <EditText
-        android:id="@+id/etYearsCount"
+        android:id="@+id/etBirthDate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/full_years"
-        android:inputType="number" />
+        android:inputType="date" />
 
     <Button
         android:id="@+id/btnNext"

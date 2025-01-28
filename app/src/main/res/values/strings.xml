@@ -45,7 +45,7 @@
     </string>
     <string name="surname">Фамилия</string>
     <string name="name">Имя</string>
-    <string name="full_years">Количество полных лет</string>
+    <string name="full_years">Дата рождения (дд.мм.гггг)</string>
     <string name="fill_all_fields">Пожалуйста, заполните все поля корректно</string>
     <string name="country">Страна</string>
     <string name="city">Город</string>
