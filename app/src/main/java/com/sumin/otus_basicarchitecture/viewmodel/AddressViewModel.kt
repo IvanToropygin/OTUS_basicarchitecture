@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sumin.otus_basicarchitecture.dadata_key.API_KEY
 import com.sumin.otus_basicarchitecture.di.WizardCache
 import com.sumin.otus_basicarchitecture.network.DadataService
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.ADDRESS_KEY
@@ -27,7 +26,7 @@ class AddressViewModel @Inject constructor(
     fun fetchAddressSuggestions(query: String) {
         viewModelScope.launch {
             try {
-                val response = dadataService.suggestAddress(query, "Token $API_KEY")
+                val response = dadataService.suggestAddress(query)
                 val firstSuggestion = response.suggestions.firstOrNull()?.value ?: ""
                 _addressSuggestions.value = firstSuggestion.ifEmpty {
                     "Не смогли найти адрес. Попробуйте изменить ввод."

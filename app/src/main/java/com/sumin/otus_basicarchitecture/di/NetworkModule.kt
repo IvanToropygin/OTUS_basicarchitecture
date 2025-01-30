@@ -1,5 +1,9 @@
-package com.sumin.otus_basicarchitecture.network
+package com.sumin.otus_basicarchitecture.di
 
+import com.sumin.otus_basicarchitecture.network.AuthInterceptor
+import com.sumin.otus_basicarchitecture.network.BASE_URL
+import com.sumin.otus_basicarchitecture.network.DadataService
+import dadata_key.API_KEY
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +20,21 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideApiKey(): String {
+        return API_KEY
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthInterceptor(apiKey: String): AuthInterceptor {
+        return AuthInterceptor(apiKey)
+    }
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(authInterceptor: AuthInterceptor): OkHttpClient {
         return OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
             .addInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
             .build()
     }
