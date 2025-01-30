@@ -20,7 +20,6 @@ class AddressViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var isMyAddressChecked = false
-    private var enableNextButton = false
 
     private val _addressSuggestions = MutableLiveData("")
     val addressSuggestions: LiveData<String> get() = _addressSuggestions
@@ -31,7 +30,7 @@ class AddressViewModel @Inject constructor(
                 val response = dadataService.suggestAddress(query, "Token $API_KEY")
                 val firstSuggestion = response.suggestions.firstOrNull()?.value ?: ""
                 _addressSuggestions.value = firstSuggestion.ifEmpty {
-                    "Не смогли найти адрес. Попробуйте позже."
+                    "Не смогли найти адрес. Попробуйте изменить ввод."
                 }
             } catch (e: Exception) {
                 Log.e("AddressViewModel", "Error fetching suggestions: ${e.message}")
@@ -42,15 +41,21 @@ class AddressViewModel @Inject constructor(
 
     fun onCheckBoxClicked(isChecked: Boolean) {
         isMyAddressChecked = isChecked
-        enableNextButton = isChecked
     }
 
     fun isNextButtonEnabled(): Boolean {
-        return enableNextButton
+        val address = addressSuggestions.value
+        val isAddressValid = !address.isNullOrBlank() &&
+                address.startsWith("г ") &&
+                address.length > 5
+
+        return isAddressValid && isMyAddressChecked
     }
 
     fun onNextButtonClicked() {
-        saveData()
+        if (isNextButtonEnabled()) {
+            saveData()
+        }
     }
 
     private fun saveData() {

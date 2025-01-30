@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.sumin.otus_basicarchitecture.R
 import com.sumin.otus_basicarchitecture.databinding.FragmentAddressBinding
 import com.sumin.otus_basicarchitecture.viewmodel.AddressViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -47,15 +47,17 @@ class AddressFragment : Fragment() {
         }
 
         binding.editTextAddress.addTextChangedListener(object : TextWatcher {
-            private val coroutineScope = CoroutineScope(Dispatchers.Main)
+            private var job: Job? = null
 
             override fun afterTextChanged(s: Editable?) {}
+
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 s?.let { query ->
                     if (query.isNotEmpty()) {
-                        coroutineScope.launch {
+                        job?.cancel()
+                        job = viewLifecycleOwner.lifecycleScope.launch {
                             delay(2_000L)
                             viewModel.fetchAddressSuggestions(query.toString().trim())
                         }
