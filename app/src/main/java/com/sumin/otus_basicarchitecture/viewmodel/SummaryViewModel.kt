@@ -4,8 +4,6 @@ import androidx.lifecycle.ViewModel
 import com.sumin.otus_basicarchitecture.di.WizardCache
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.ADDRESS_KEY
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.BIRTHDAY_KEY
-import com.sumin.otus_basicarchitecture.utils.Constants.Companion.CITY_KEY
-import com.sumin.otus_basicarchitecture.utils.Constants.Companion.COUNTRY_KEY
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.INTEREST_KEY
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.NAME_KEY
 import com.sumin.otus_basicarchitecture.utils.Constants.Companion.SURNAME_KEY
@@ -21,8 +19,6 @@ class SummaryViewModel @Inject constructor(
         val firstName = wizardCache.getData(NAME_KEY)
         val lastName = wizardCache.getData(SURNAME_KEY)
         val birthDate = wizardCache.getData(BIRTHDAY_KEY)
-        val country = wizardCache.getData(COUNTRY_KEY)
-        val city = wizardCache.getData(CITY_KEY)
         val address = wizardCache.getData(ADDRESS_KEY)
         val interests = wizardCache.getData(INTEREST_KEY)
 
@@ -30,8 +26,6 @@ class SummaryViewModel @Inject constructor(
             Имя: $firstName
             Фамилия: $lastName
             Дата рождения: $birthDate
-            Страна: $country
-            Город: $city
             Адрес: $address
             Интересы: $interests
         """.trimIndent()
