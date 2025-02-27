@@ -20,6 +20,8 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.mockito.kotlin.any
+import org.mockito.kotlin.never
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 
 @RunWith(MockitoJUnitRunner::class)
@@ -51,20 +53,20 @@ class AddressViewModelTest {
     val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @Test
-    fun `fetchAddressSuggestions should update LiveData with first suggestion on success`() =
+    fun `fetchAddressSuggestions should update LiveData with first AddressSuggestion on success`() =
         runBlocking {
-        val mockResponse = SuggestionsResponse(
-            suggestions = listOf(
-                AddressSuggestion(value = "г Москва, ул Ленина"),
-                AddressSuggestion(value = "г Санкт-Петербург, Невский пр-т")
+            val mockResponse = SuggestionsResponse(
+                suggestions = listOf(
+                    AddressSuggestion(value = "г Москва, ул Ленина"),
+                    AddressSuggestion(value = "г Санкт-Петербург, Невский пр-т")
+                )
             )
-        )
-        whenever(mockDadataService.suggestAddress(any())).thenReturn(mockResponse)
+            whenever(mockDadataService.suggestAddress(any())).thenReturn(mockResponse)
 
-        viewModel.fetchAddressSuggestions("Москва")
+            viewModel.fetchAddressSuggestions("Москва")
 
-        assertEquals("г Москва, ул Ленина", viewModel.addressSuggestions.value)
-    }
+            assertEquals("г Москва, ул Ленина", viewModel.addressSuggestions.value)
+        }
 
     @Test
     fun `fetchAddressSuggestions should show error message when response is empty`() = runBlocking {
@@ -72,6 +74,38 @@ class AddressViewModelTest {
 
         viewModel.fetchAddressSuggestions("InvalidQuery")
 
-        assertEquals("Не смогли найти адрес. Попробуйте изменить ввод.", viewModel.addressSuggestions.value)
+        assertEquals(
+            "Не смогли найти адрес. Попробуйте изменить ввод.",
+            viewModel.addressSuggestions.value
+        )
+    }
+
+    @Test
+    fun `onNextButtonClicked should not save data when button is disabled`() = runBlocking {
+        val invalidAddress = "invalid address"
+        whenever(mockDadataService.suggestAddress(any())).thenReturn(
+            SuggestionsResponse(listOf(AddressSuggestion(invalidAddress)))
+        )
+        viewModel.fetchAddressSuggestions("query")
+
+        viewModel.onCheckBoxClicked(false)
+
+        viewModel.onNextButtonClicked()
+
+        verify(mockWizardCache, never()).saveData(any(), any())
+    }
+
+    @Test
+    fun `should not save when checkbox checked but invalid address`() = runBlocking {
+        whenever(mockDadataService.suggestAddress(any())).thenReturn(
+            SuggestionsResponse(listOf(AddressSuggestion("Москва")))
+        )
+
+        viewModel.fetchAddressSuggestions("query")
+        viewModel.onCheckBoxClicked(true)
+
+        viewModel.onNextButtonClicked()
+
+        verify(mockWizardCache, never()).saveData(any(), any())
     }
 }
